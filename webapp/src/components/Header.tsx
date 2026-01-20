@@ -1,10 +1,11 @@
 type HeaderProps = {
-  totalSchools: number
+  mdCount: number
+  doCount: number
   matchCount: number
   mode: 'match' | 'browse'
 }
 
-const Header = ({ totalSchools, matchCount, mode }: HeaderProps) => {
+const Header = ({ mdCount, doCount, matchCount, mode }: HeaderProps) => {
   return (
     <header className="px-4 pt-6 md:px-8">
       <div className="mx-auto max-w-7xl">
@@ -22,38 +23,51 @@ const Header = ({ totalSchools, matchCount, mode }: HeaderProps) => {
                 className="text-2xl uppercase tracking-tight md:text-3xl"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
-                MSAR Finder
+                Med School Finder
               </h1>
               <p className="text-xs font-semibold uppercase tracking-wider opacity-60">
-                Find your med school match
+                MD & DO Programs
               </p>
             </div>
           </div>
 
           {/* Stats Pills */}
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2">
             <div 
-              className="neo-box flex items-center gap-3 px-4 py-2"
-              style={{ background: '#b8ff57' }}
+              className="neo-box flex items-center gap-2 px-3 py-2"
+              style={{ background: '#ff6b9d' }}
             >
-              <div>
+              <div className="text-center">
                 <p className="text-lg font-bold leading-none">
-                  {totalSchools}
+                  {mdCount}
                 </p>
-                <p className="text-[10px] font-bold uppercase tracking-wider opacity-60">
-                  Total
+                <p className="text-[10px] font-bold uppercase tracking-wider opacity-70">
+                  MD
                 </p>
               </div>
             </div>
             <div 
-              className="neo-box flex items-center gap-3 px-4 py-2"
-              style={{ background: mode === 'match' ? '#ff6b9d' : '#5ce1e6' }}
+              className="neo-box flex items-center gap-2 px-3 py-2"
+              style={{ background: '#b8ff57' }}
             >
-              <div>
+              <div className="text-center">
+                <p className="text-lg font-bold leading-none">
+                  {doCount}
+                </p>
+                <p className="text-[10px] font-bold uppercase tracking-wider opacity-70">
+                  DO
+                </p>
+              </div>
+            </div>
+            <div 
+              className="neo-box flex items-center gap-2 px-3 py-2"
+              style={{ background: mode === 'match' ? '#5ce1e6' : '#ffe14d' }}
+            >
+              <div className="text-center">
                 <p className="text-lg font-bold leading-none">
                   {matchCount}
                 </p>
-                <p className="text-[10px] font-bold uppercase tracking-wider opacity-60">
+                <p className="text-[10px] font-bold uppercase tracking-wider opacity-70">
                   {mode === 'match' ? 'Matches' : 'Showing'}
                 </p>
               </div>

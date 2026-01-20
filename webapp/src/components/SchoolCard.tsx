@@ -17,17 +17,25 @@ const formatValue = (value: number | null, formatter?: Intl.NumberFormat) => {
   return (formatter ?? numberFormatter).format(value)
 }
 
-const colors = [
+const mdColors = [
   '#ff6b9d', // pink
   '#ffe14d', // yellow
-  '#b8ff57', // lime
   '#5ce1e6', // blue
   '#ff914d', // orange
   '#cb6ce6', // purple
 ]
 
-const getColorForSchool = (id: string | number) => {
+const doColors = [
+  '#b8ff57', // lime
+  '#7dd3fc', // sky blue
+  '#a3e635', // lime green
+  '#34d399', // emerald
+  '#22d3d3', // cyan
+]
+
+const getColorForSchool = (id: string | number, degreeType: 'MD' | 'DO') => {
   const hash = String(id).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  const colors = degreeType === 'DO' ? doColors : mdColors
   return colors[hash % colors.length]
 }
 
@@ -36,15 +44,23 @@ type SchoolCardProps = {
 }
 
 const SchoolCard = ({ school }: SchoolCardProps) => {
-  const accentColor = getColorForSchool(school.id)
+  const accentColor = getColorForSchool(school.id, school.degreeType)
+  const degreeColor = school.degreeType === 'DO' ? '#b8ff57' : '#ff6b9d'
   
   return (
     <article className="neo-card flex h-full flex-col overflow-hidden">
-      {/* Header accent bar */}
+      {/* Header accent bar with degree indicator */}
       <div 
-        className="h-3 w-full"
+        className="flex h-3 w-full items-center justify-between"
         style={{ background: accentColor }}
-      />
+      >
+        <span 
+          className="h-full px-2 text-[9px] font-black leading-[12px] tracking-wider"
+          style={{ background: degreeColor }}
+        >
+          {school.degreeType}
+        </span>
+      </div>
       
       <div className="flex flex-1 flex-col p-5">
         {/* School Name & Location */}
@@ -123,14 +139,22 @@ const SchoolCard = ({ school }: SchoolCardProps) => {
           </p>
         </div>
 
-        {/* Degree Tag */}
-        <div className="mt-4 flex">
+        {/* Degree Tags */}
+        <div className="mt-4 flex flex-wrap gap-2">
           <span 
             className="neo-tag"
-            style={{ background: '#cb6ce6' }}
+            style={{ background: school.degreeType === 'DO' ? '#b8ff57' : '#ff6b9d' }}
           >
-            {school.degree || 'MD Program'}
+            {school.degreeType}
           </span>
+          {school.degree && school.degree !== school.degreeType && (
+            <span 
+              className="neo-tag"
+              style={{ background: '#cb6ce6' }}
+            >
+              {school.degree}
+            </span>
+          )}
         </div>
       </div>
     </article>

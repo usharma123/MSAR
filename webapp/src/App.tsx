@@ -4,7 +4,7 @@ import StatInput from './components/StatInput'
 import SearchBar from './components/SearchBar'
 import Filters, { type FiltersState } from './components/Filters'
 import SchoolList from './components/SchoolList'
-import { schools as allSchools } from './data/schools'
+import { schools as allSchools, mdSchoolsList, doSchoolsList } from './data/schools'
 
 const MATCH_TOLERANCE = {
   mcat: 3,
@@ -12,6 +12,7 @@ const MATCH_TOLERANCE = {
 }
 
 const initialFilters: FiltersState = {
+  degreeType: 'All',
   state: 'All',
   classSizeMin: '',
   classSizeMax: '',
@@ -77,6 +78,11 @@ const App = () => {
     const tuitionOutMax = parseNumberInput(filters.tuitionOutMax)
 
     return baseSchools.filter((school) => {
+      // Filter by degree type (MD/DO/All)
+      if (filters.degreeType !== 'All' && school.degreeType !== filters.degreeType) {
+        return false
+      }
+
       if (filters.state !== 'All' && school.state !== filters.state) {
         return false
       }
@@ -87,6 +93,7 @@ const App = () => {
           school.city,
           school.state,
           school.degree,
+          school.degreeType,
         ]
           .join(' ')
           .toLowerCase()
@@ -139,7 +146,8 @@ const App = () => {
   return (
     <div className="min-h-screen pb-10">
       <Header 
-        totalSchools={allSchools.length} 
+        mdCount={mdSchoolsList.length}
+        doCount={doSchoolsList.length}
         matchCount={filteredSchools.length}
         mode={mode}
       />

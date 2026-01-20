@@ -1,6 +1,9 @@
 import type { ChangeEvent } from 'react'
 
+export type DegreeFilter = 'All' | 'MD' | 'DO'
+
 export type FiltersState = {
+  degreeType: DegreeFilter
   state: string
   classSizeMin: string
   classSizeMax: string
@@ -46,6 +49,37 @@ const Filters = ({ filters, onChange, onReset, states }: FiltersProps) => {
       </div>
       
       <div className="space-y-4">
+        {/* Degree Type Filter */}
+        <label className="block">
+          <span className="mb-2 block text-xs font-bold uppercase tracking-wider">
+            Degree Type
+          </span>
+          <div className="grid grid-cols-3 gap-2">
+            {(['All', 'MD', 'DO'] as const).map((type) => (
+              <button
+                key={type}
+                type="button"
+                onClick={() => onChange({ ...filters, degreeType: type })}
+                className={`neo-btn text-sm ${
+                  filters.degreeType === type
+                    ? type === 'MD' 
+                      ? 'neo-btn-pink' 
+                      : type === 'DO'
+                      ? 'neo-btn-lime'
+                      : 'neo-btn-yellow'
+                    : ''
+                }`}
+                style={{
+                  boxShadow: filters.degreeType === type ? '3px 3px 0px #000' : 'none',
+                  transform: filters.degreeType === type ? 'translate(-1px, -1px)' : 'none',
+                }}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+        </label>
+
         <label className="block">
           <span className="mb-2 block text-xs font-bold uppercase tracking-wider">
             State / Province

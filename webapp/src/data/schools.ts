@@ -1,4 +1,7 @@
-import rawSchools from './schools.json'
+import rawMdSchools from './schools.json'
+import rawDoSchools from './do_schools.json'
+
+export type DegreeType = 'MD' | 'DO'
 
 export type School = {
   id: string
@@ -8,6 +11,7 @@ export type School = {
   mcat: number | null
   gpa: number | null
   degree: string
+  degreeType: DegreeType
   classSize: number | null
   tuitionInState: number | null
   tuitionOutState: number | null
@@ -47,22 +51,33 @@ const toNumber = (value: unknown): number | null => {
   return null
 }
 
-const rawList = rawSchools as RawSchool[]
+const parseSchools = (rawList: RawSchool[], degreeType: DegreeType): School[] => {
+  return rawList.map((school, index) => {
+    const name = school.Name?.trim() || 'Unknown School'
+    const state = school.State?.trim() || ''
 
-export const schools: School[] = rawList.map((school, index) => {
-  const name = school.Name?.trim() || 'Unknown School'
-  const state = school.State?.trim() || ''
+    return {
+      id: `${degreeType}-${name}-${state}-${index}`,
+      name,
+      city: school.City?.trim() || '',
+      state,
+      mcat: toNumber(school.MCAT),
+      gpa: toNumber(school.GPA),
+      degree: school.Degree?.trim() || degreeType,
+      degreeType,
+      classSize: toNumber(school['Class Size']),
+      tuitionInState: toNumber(school['In-state']),
+      tuitionOutState: toNumber(school['Out-State']),
+    }
+  })
+}
 
-  return {
-    id: `${name}-${state}-${index}`,
-    name,
-    city: school.City?.trim() || '',
-    state,
-    mcat: toNumber(school.MCAT),
-    gpa: toNumber(school.GPA),
-    degree: school.Degree?.trim() || 'Not Provided',
-    classSize: toNumber(school['Class Size']),
-    tuitionInState: toNumber(school['In-state']),
-    tuitionOutState: toNumber(school['Out-State']),
-  }
-})
+const mdSchools = parseSchools(rawMdSchools as RawSchool[], 'MD')
+const doSchools = parseSchools(rawDoSchools as RawSchool[], 'DO')
+
+// Combined list of all schools
+export const schools: School[] = [...mdSchools, ...doSchools]
+
+// Separate exports if needed
+export const mdSchoolsList = mdSchools
+export const doSchoolsList = doSchools
